@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบการให้คะแนนการแข่งขัน AI for Productivity Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="gradient-bg text-white p-6 shadow-lg">
+            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">ระบบให้คะแนนการแข่งขัน</h1>
+                    <h2 class="text-xl">AI for Productivity Excellence</h2>
+                    <p class="text-sm opacity-90">โครงการพัฒนาบุคลากร มหาวิทยาลัยมหาสารคาม ประจำปี 2568</p>
+                </div>
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik01MCw1IEMzMC4xLDUgMTQuMywyMC44IDE0LjMsNDAuNyBDMTQuMyw2MC42IDMwLjEsNzYuNCA1MCw3Ni40IEM2OS45LDc2LjQgODUuNyw2MC42IDg1LjcsNDAuNyBDODUuNywyMC44IDY5LjksNSA1MCw1IFogTTUwLDY4LjYgQzM0LjQsNjguNiAyMS43LDU1LjkgMjEuNyw0MC4zIEMyMS43LDI0LjcgMzQuNCwxMiA1MCwxMiBDNjUuNiwxMiA3OC4zLDI0LjcgNzguMyw0MC4zIEM3OC4zLDU1LjkgNjUuNiw2OC42IDUwLDY4LjYgWiBNNTAsOTUgQzQ3LjIsOTUgNDUsOTIuOCA0NSw5MCBDNDUsODcuMiA0Ny4yLDg1IDUwLDg1IEM1Mi44LDg1IDU1LDg3LjIgNTUsOTAgQzU1LDkyLjggNTIuOCw5NSA1MCw5NSBaIE03MCw5MCBDNjcuMiw5MCA2NSw4Ny44IDY1LDg1IEM2NSw4Mi4yIDY3LjIsODAgNzAsODAgQzcyLjgsODAgNzUsODIuMiA3NSw4NSBDNzUsODcuOCA3Mi44LDkwIDcwLDkwIFogTTMwLDkwIEMyNy4yLDkwIDI1LDg3LjggMjUsODUgQzI1LDgyLjIgMjcuMiw4MCAzMCw4MCBDMzIuOCw4MCAzNSw4Mi4yIDM1LDg1IEMzNSw4Ny44IDMyLjgsOTAgMzAsOTAgWiBNODUsNzUgQzgyLjIsNzUgODAsNzIuOCA4MCw3MCBDODAsNjcuMiA4Mi4yLDY1IDg1LDY1IEM4Ny44LDY1IDkwLDY3LjIgOTAsNzAgQzkwLDcyLjggODcuOCw3NSA4NSw3NSBaIE0xNSw3NSBDMTIuMiw3NSAxMCw3Mi44IDEwLDcwIEMxMCw2Ny4yIDEyLjIsNjUgMTUsNjUgQzE3LjgsNjUgMjAsNjcuMiAyMCw3MCBDMjAsNzIuOCAxNy44LDc1IDE1LDc1IFoiLz48L3N2Zz4=" alt="Logo" class="h-16 mt-4 md:mt-0">
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto p-4 md:p-6">
+            <!-- Tabs -->
+            <div class="mb-8">
+                <div class="flex flex-wrap border-b border-gray-200">
+                    <button id="tab-judge" class="px-6 py-3 text-blue-600 border-b-2 border-blue-600 font-medium">กรรมการให้คะแนน</button>
+                    <button id="tab-results" class="px-6 py-3 text-gray-500 font-medium">ผลคะแนน</button>
+                    <button id="tab-admin" class="px-6 py-3 text-gray-500 font-medium">ผู้ดูแลระบบ</button>
+                </div>
+            </div>
+
+            <!-- Judge Panel -->
+            <div id="judge-panel" class="animate-fade-in">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4">ข้อมูลกรรมการ</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อกรรมการ</label>
+                            <select id="judge-name" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">-- เลือกชื่อกรรมการ --</option>
+                                <option value="1">ดร.สมชาย ใจดี</option>
+                                <option value="2">รศ.ดร.วิมล ปัญญา</option>
+                                <option value="3">ผศ.ดร.นภา วิทยา</option>
+                                <option value="4">ดร.ประภา มีสุข</option>
+                                <option value="5">ผศ.ดร.พิชัย เทคโน</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">รหัสยืนยัน</label>
+                            <input type="password" id="judge-password" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="กรอกรหัสยืนยัน">
+                        </div>
+                    </div>
+                    <button id="judge-login" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">เข้าสู่ระบบ</button>
+                </div>
+
+                <div id="scoring-section" class="hidden">
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                        <h2 class="text-xl font-semibold mb-4">ให้คะแนนผู้เข้าประกวด</h2>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">เลือกผู้เข้าประกวด</label>
+                            <select id="contestant-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">-- เลือกผู้เข้าประกวด --</option>
+                                <!-- จะถูกเติมด้วย JavaScript -->
+                            </select>
+                        </div>
+                        
+                        <div id="contestant-info" class="hidden mb-6 p-4 bg-gray-50 rounded-md">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div>
+                                    <span class="text-sm text-gray-500">ชื่อ-นามสกุล:</span>
+                                    <span id="contestant-name" class="font-medium ml-2"></span>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-500">สังกัด:</span>
+                                    <span id="contestant-department" class="font-medium ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="scoring-form" class="hidden">
+                            <div class="space-y-6">
+                                <div class="border-b pb-4">
+                                    <h3 class="font-medium mb-2">1. ความคิดสร้างสรรค์และนวัตกรรม (20 คะแนน)</h3>
+                                    <p class="text-sm text-gray-600 mb-3">การประยุกต์ใช้ AI อย่างสร้างสรรค์และเป็นนวัตกรรมในการทำงาน</p>
+                                    <input type="range" min="0" max="20" value="10" class="score-slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-criteria="creativity">
+                                    <div class="flex justify-between text-xs text-gray-600 px-1">
+                                        <span>0</span>
+                                        <span>5</span>
+                                        <span>10</span>
+                                        <span>15</span>
+                                        <span>20</span>
+                                    </div>
+                                    <div class="text-center font-medium mt-2">
+                                        คะแนน: <span class="score-value">10</span>/20
+                                    </div>
+                                </div>
+                                
+                                <div class="border-b pb-4">
+                                    <h3 class="font-medium mb-2">2. ประสิทธิภาพและผลลัพธ์ (25 คะแนน)</h3>
+                                    <p class="text-sm text-gray-600 mb-3">การเพิ่มประสิทธิภาพและผลลัพธ์ที่ได้จากการใช้ AI</p>
+                                    <input type="range" min="0" max="25" value="12" class="score-slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-criteria="efficiency">
+                                    <div class="flex justify-between text-xs text-gray-600 px-1">
+                                        <span>0</span>
+                                        <span>5</span>
+                                        <span>10</span>
+                                        <span>15</span>
+                                        <span>20</span>
+                                        <span>25</span>
+                                    </div>
+                                    <div class="text-center font-medium mt-2">
+                                        คะแนน: <span class="score-value">12</span>/25
+                                    </div>
+                                </div>
+                                
+                                <div class="border-b pb-4">
+                                    <h3 class="font-medium mb-2">3. การนำไปใช้จริง (20 คะแนน)</h3>
+                                    <p class="text-sm text-gray-600 mb-3">ความเป็นไปได้และความพร้อมในการนำไปใช้งานจริง</p>
+                                    <input type="range" min="0" max="20" value="10" class="score-slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-criteria="practicality">
+                                    <div class="flex justify-between text-xs text-gray-600 px-1">
+                                        <span>0</span>
+                                        <span>5</span>
+                                        <span>10</span>
+                                        <span>15</span>
+                                        <span>20</span>
+                                    </div>
+                                    <div class="text-center font-medium mt-2">
+                                        คะแนน: <span class="score-value">10</span>/20
+                                    </div>
+                                </div>
+                                
+                                <div class="border-b pb-4">
+                                    <h3 class="font-medium mb-2">4. การนำเสนอและสื่อสาร (15 คะแนน)</h3>
+                                    <p class="text-sm text-gray-600 mb-3">ความชัดเจนและน่าสนใจในการนำเสนอผลงาน</p>
+                                    <input type="range" min="0" max="15" value="7" class="score-slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-criteria="presentation">
+                                    <div class="flex justify-between text-xs text-gray-600 px-1">
+                                        <span>0</span>
+                                        <span>5</span>
+                                        <span>10</span>
+                                        <span>15</span>
+                                    </div>
+                                    <div class="text-center font-medium mt-2">
+                                        คะแนน: <span class="score-value">7</span>/15
+                                    </div>
+                                </div>
+                                
+                                <div class="pb-4">
+                                    <h3 class="font-medium mb-2">5. ผลกระทบต่อองค์กร (20 คะแนน)</h3>
+                                    <p class="text-sm text-gray-600 mb-3">ผลกระทบเชิงบวกต่อองค์กรและการพัฒนาที่ยั่งยืน</p>
+                                    <input type="range" min="0" max="20" value="10" class="score-slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-criteria="impact">
+                                    <div class="flex justify-between text-xs text-gray-600 px-1">
+                                        <span>0</span>
+                                        <span>5</span>
+                                        <span>10</span>
+                                        <span>15</span>
+                                        <span>20</span>
+                                    </div>
+                                    <div class="text-center font-medium mt-2">
+                                        คะแนน: <span class="score-value">10</span>/20
+                                    </div>
+                                </div>
+                                
+                                <div class="border-t pt-4">
+                                    <h3 class="font-medium mb-2">ข้อคิดเห็นเพิ่มเติม (ไม่บังคับ)</h3>
+                                    <textarea id="judge-comment" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3" placeholder="ข้อเสนอแนะหรือความคิดเห็นเพิ่มเติม..."></textarea>
+                                </div>
+                                
+                                <div class="flex justify-between items-center pt-4">
+                                    <div class="text-lg font-semibold">
+                                        คะแนนรวม: <span id="total-score" class="text-blue-600">49</span>/100
+                                    </div>
+                                    <button id="submit-score" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">บันทึกคะแนน</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div id="results-panel" class="hidden animate-fade-in">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4">ผลคะแนนการแข่งขัน</h2>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">เลือกผู้เข้าประกวด</label>
+                        <select id="result-contestant-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- เลือกผู้เข้าประกวด --</option>
+                            <!-- จะถูกเติมด้วย JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div id="result-container" class="hidden">
+                        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <h3 class="font-medium text-gray-700">ชื่อ-นามสกุล</h3>
+                                    <p id="result-name" class="text-lg font-semibold"></p>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-gray-700">สังกัด</h3>
+                                    <p id="result-department" class="text-lg font-semibold"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white rounded-lg shadow p-4">
+                                <h3 class="text-lg font-semibold mb-4">คะแนนรวมทั้งหมด</h3>
+                                <div class="flex items-center justify-center">
+                                    <div class="relative w-48 h-48">
+                                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="45" fill="none" stroke="#e6e6e6" stroke-width="10" />
+                                            <circle id="score-circle" cx="50" cy="50" r="45" fill="none" stroke="#3b82f6" stroke-width="10" stroke-dasharray="0 283" stroke-dashoffset="0" transform="rotate(-90 50 50)" />
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                            <span id="avg-score" class="text-4xl font-bold text-blue-600">0</span>
+                                            <span class="text-gray-500">คะแนน</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow p-4">
+                                <h3 class="text-lg font-semibold mb-4">คะแนนแยกตามหัวข้อ</h3>
+                                <div class="chart-container">
+                                    <canvas id="criteria-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 bg-white rounded-lg shadow p-4">
+                            <h3 class="text-lg font-semibold mb-4">คะแนนจากกรรมการแต่ละท่าน</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead>
+                                        <tr>
+                                            <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">กรรมการ</th>
+                                            <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ความคิดสร้างสรรค์</th>
+                                            <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ประสิทธิภาพ</th>
+                                            <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">การนำไปใช้จริง</th>
+                                            <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">การนำเสนอ</th>
+                                            <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">ผลกระทบ</th>
+                                            <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">รวม</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="judges-scores" class="bg-white divide-y divide-gray-200">
+                                        <!-- จะถูกเติมด้วย JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 bg-white rounded-lg shadow p-4">
+                            <h3 class="text-lg font-semibold mb-4">ข้อคิดเห็นจากกรรมการ</h3>
+                            <div id="judges-comments" class="space-y-4">
+                                <!-- จะถูกเติมด้วย JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="admin-panel" class="hidden animate-fade-in">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4">ผู้ดูแลระบบ</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อผู้ดูแลระบบ</label>
+                            <input type="text" id="admin-username" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="ชื่อผู้ใช้">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label>
+                            <input type="password" id="admin-password" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="รหัสผ่าน">
+                        </div>
+                    </div>
+                    
+                    <button id="admin-login" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">เข้าสู่ระบบ</button>
+                    
+                    <div id="admin-controls" class="hidden mt-8">
+                        <div class="border-t pt-6">
+                            <h3 class="text-lg font-semibold mb-4">จัดการข้อมูล</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-medium mb-3">ตั้งค่า Google Sheet</h4>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">URL Google Sheet</label>
+                                            <input type="text" id="sheet-url" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://docs.google.com/spreadsheets/d/...">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ Sheet ข้อมูลผู้เข้าประกวด</label>
+                                            <input type="text" id="contestants-sheet" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="ผู้เข้าประกวด">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ Sheet คะแนน</label>
+                                            <input type="text" id="scores-sheet" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="คะแนน">
+                                        </div>
+                                        <button id="save-sheet-settings" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">บันทึกการตั้งค่า</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="font-medium mb-3">จัดการผู้เข้าประกวด</h4>
+                                    <div class="space-y-3">
+                                        <button id="sync-contestants" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition w-full">ซิงค์ข้อมูลผู้เข้าประกวดจาก Sheet</button>
+                                        <button id="export-results" class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition w-full">ส่งออกผลคะแนนทั้งหมด</button>
+                                        <button id="reset-scores" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition w-full">รีเซ็ตคะแนนทั้งหมด</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <h4 class="font-medium mb-3">รายชื่อผู้เข้าประกวด</h4>
+                                <div class="overflow-x-auto bg-white border rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead>
+                                            <tr>
+                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ลำดับ</th>
+                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ชื่อ-นามสกุล</th>
+                                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สังกัด</th>
+                                                <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">คะแนนเฉลี่ย</th>
+                                                <th class="px-4 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">จัดการ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-contestants-list" class="bg-white divide-y divide-gray-200">
+                                            <!-- จะถูกเติมด้วย JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-6 mt-8">
+            <div class="container mx-auto px-4 text-center">
+                <p>ให้คะแนนการประกวด AI for Productivity Excellence</p>
+                <p class="text-sm mt-2">กองการเจ้าหน้าที่ มหาวิทยาลัยมหาสารคาม &copy; 2568</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 right-4 max-w-md bg-white rounded-lg shadow-lg border-l-4 border-green-500 p-4 hidden transform transition-all duration-300 z-50">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p id="notification-message" class="text-sm font-medium text-gray-800"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Sample data (would be replaced with actual data from Google Sheets in production)
+        const contestants = [
+            { id: 1, name: "นายสมชาย ใจดี", department: "สำนักคอมพิวเตอร์" },
+            { id: 2, name: "นางสาวสมหญิง รักเรียน", department: "กองคลังและพัสดุ" },
+            { id: 3, name: "นายวิชัย เทคโนโลยี", department: "คณะวิทยาการสารสนเทศ" },
+            { id: 4, name: "นางนภา พัฒนา", department: "กองแผนงาน" },
+            { id: 5, name: "นายภูมิ นวัตกรรม", department: "สำนักวิจัยและพัฒนา" }
+        ];
+
+        const scores = {
+            1: [
+                { judgeId: 1, creativity: 18, efficiency: 22, practicality: 17, presentation: 13, impact: 18, comment: "ผลงานมีความคิดสร้างสรรค์สูง สามารถนำไปใช้ได้จริง" },
+                { judgeId: 2, creativity: 16, efficiency: 20, practicality: 18, presentation: 12, impact: 17, comment: "การนำเสนอชัดเจน แต่ควรเพิ่มรายละเอียดการนำไปใช้" },
+                { judgeId: 3, creativity: 17, efficiency: 21, practicality: 16, presentation: 14, impact: 19, comment: "" },
+                { judgeId: 4, creativity: 15, efficiency: 23, practicality: 15, presentation: 13, impact: 16, comment: "มีประสิทธิภาพสูง แต่อาจต้องปรับปรุงด้านการนำไปใช้จริง" },
+                { judgeId: 5, creativity: 17, efficiency: 22, practicality: 17, presentation: 12, impact: 18, comment: "ผลงานดีมาก มีผลกระทบต่อองค์กรสูง" }
+            ],
+            2: [
+                { judgeId: 1, creativity: 15, efficiency: 18, practicality: 16, presentation: 12, impact: 15, comment: "" },
+                { judgeId: 2, creativity: 14, efficiency: 19, practicality: 15, presentation: 11, impact: 16, comment: "มีแนวคิดที่ดี แต่ควรพัฒนาด้านการนำเสนอ" },
+                { judgeId: 3, creativity: 16, efficiency: 20, practicality: 14, presentation: 10, impact: 17, comment: "" },
+                { judgeId: 4, creativity: 15, efficiency: 17, practicality: 15, presentation: 12, impact: 14, comment: "" },
+                { judgeId: 5, creativity: 14, efficiency: 19, practicality: 16, presentation: 11, impact: 15, comment: "ควรเพิ่มความชัดเจนในการนำเสนอ" }
+            ],
+            3: [
+                { judgeId: 1, creativity: 19, efficiency: 23, practicality: 18, presentation: 14, impact: 19, comment: "ผลงานยอดเยี่ยม มีความคิดสร้างสรรค์สูงมาก" },
+                { judgeId: 2, creativity: 18, efficiency: 24, practicality: 19, presentation: 13, impact: 18, comment: "" },
+                { judgeId: 3, creativity: 19, efficiency: 22, practicality: 18, presentation: 14, impact: 19, comment: "การนำไปใช้จริงมีความเป็นไปได้สูง" },
+                { judgeId: 4, creativity: 18, efficiency: 23, practicality: 17, presentation: 13, impact: 18, comment: "" },
+                { judgeId: 5, creativity: 19, efficiency: 24, practicality: 18, presentation: 14, impact: 19, comment: "ผลงานดีเยี่ยม สมบูรณ์แบบ" }
+            ],
+            4: [
+                { judgeId: 1, creativity: 16, efficiency: 20, practicality: 15, presentation: 12, impact: 16, comment: "" },
+                { judgeId: 2, creativity: 15, efficiency: 19, practicality: 16, presentation: 11, impact: 15, comment: "มีประสิทธิภาพดี แต่ควรปรับปรุงด้านการนำเสนอ" },
+                { judgeId: 3, creativity: 16, efficiency: 21, practicality: 15, presentation: 12, impact: 17, comment: "" },
+                { judgeId: 4, creativity: 15, efficiency: 20, practicality: 14, presentation: 11, impact: 16, comment: "" },
+                { judgeId: 5, creativity: 16, efficiency: 19, practicality: 15, presentation: 12, impact: 16, comment: "ผลงานดี มีศักยภาพในการพัฒนาต่อ" }
+            ],
+            5: [
+                { judgeId: 1, creativity: 17, efficiency: 21, practicality: 16, presentation: 13, impact: 17, comment: "มีความคิดสร้างสรรค์ดี การนำเสนอชัดเจน" },
+                { judgeId: 2, creativity: 16, efficiency: 22, practicality: 17, presentation: 12, impact: 18, comment: "" },
+                { judgeId: 3, creativity: 17, efficiency: 20, practicality: 16, presentation: 13, impact: 17, comment: "ผลกระทบต่อองค์กรดี มีประโยชน์" },
+                { judgeId: 4, creativity: 16, efficiency: 21, practicality: 15, presentation: 12, impact: 16, comment: "" },
+                { judgeId: 5, creativity: 17, efficiency: 22, practicality: 16, presentation: 13, impact: 17, comment: "ผลงานมีคุณภาพดี สามารถนำไปใช้ได้จริง" }
+            ]
+        };
+
+        const judges = [
+            { id: 1, name: "ดร.สมชาย ใจดี", password: "P123" },
+            { id: 2, name: "รศ.ดร.วิมล ปัญญา", password: "P123" },
+            { id: 3, name: "ผศ.ดร.นภา วิทยา", password: "P123" },
+            { id: 4, name: "ดร.ประภา มีสุข", password: "P123" },
+            { id: 5, name: "ผศ.ดร.พิชัย เทคโน", password: "P123" }
+        ];
+
+        // Global variables
+        let currentJudge = null;
+        let currentContestant = null;
+        let criteriaChart = null;
+
+        // DOM Elements
+        const tabJudge = document.getElementById('tab-judge');
+        const tabResults = document.getElementById('tab-results');
+        const tabAdmin = document.getElementById('tab-admin');
+        const judgePanel = document.getElementById('judge-panel');
+        const resultsPanel = document.getElementById('results-panel');
+        const adminPanel = document.getElementById('admin-panel');
+        const scoringSection = document.getElementById('scoring-section');
+        const contestantInfo = document.getElementById('contestant-info');
+        const scoringForm = document.getElementById('scoring-form');
+        const resultContainer = document.getElementById('result-container');
+        const adminControls = document.getElementById('admin-controls');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            populateContestantDropdowns();
+            setupEventListeners();
+            updateTotalScore();
+        });
+
+        // Tab switching functionality
+        function initializeTabs() {
+            tabJudge.addEventListener('click', () => switchTab('judge'));
+            tabResults.addEventListener('click', () => switchTab('results'));
+            tabAdmin.addEventListener('click', () => switchTab('admin'));
+            
+            // Default to judge panel
+            switchTab('judge');
+        }
+
+        function switchTab(tab) {
+            // Reset active tab styling
+            [tabJudge, tabResults, tabAdmin].forEach(t => {
+                t.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                t.classList.add('text-gray-500');
+            });
+            
+            // Hide all panels
+            judgePanel.classList.add('hidden');
+            resultsPanel.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            
+            // Show selected tab and panel
+            if (tab === 'judge') {
+                tabJudge.classList.remove('text-gray-500');
+                tabJudge.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                judgePanel.classList.remove('hidden');
+            } else if (tab === 'results') {
+                tabResults.classList.remove('text-gray-500');
+                tabResults.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                resultsPanel.classList.remove('hidden');
+            } else if (tab === 'admin') {
+                tabAdmin.classList.remove('text-gray-500');
+                tabAdmin.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                adminPanel.classList.remove('hidden');
+            }
+        }
+
+        // Populate contestant dropdowns
+        function populateContestantDropdowns() {
+            const contestantSelect = document.getElementById('contestant-select');
+            const resultContestantSelect = document.getElementById('result-contestant-select');
+            
+            // Clear existing options
+            contestantSelect.innerHTML = '<option value="">-- เลือกผู้เข้าประกวด --</option>';
+            resultContestantSelect.innerHTML = '<option value="">-- เลือกผู้เข้าประกวด --</option>';
+            
+            // Add contestants to dropdowns
+            contestants.forEach(contestant => {
+                const option1 = document.createElement('option');
+                option1.value = contestant.id;
+                option1.textContent = `${contestant.name} (${contestant.department})`;
+                contestantSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = contestant.id;
+                option2.textContent = `${contestant.name} (${contestant.department})`;
+                resultContestantSelect.appendChild(option2);
+            });
+            
+            // Populate admin contestants list
+            populateAdminContestantsList();
+        }
+
+        function populateAdminContestantsList() {
+            const adminContestantsList = document.getElementById('admin-contestants-list');
+            adminContestantsList.innerHTML = '';
+            
+            contestants.forEach((contestant, index) => {
+                const avgScore = calculateAverageScore(contestant.id);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap">${index + 1}</td>
+                    <td class="px-4 py-3">${contestant.name}</td>
+                    <td class="px-4 py-3">${contestant.department}</td>
+                    <td class="px-4 py-3 text-center">${avgScore.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-center">
+                        <button class="view-scores-btn px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm" data-id="${contestant.id}">ดูคะแนน</button>
+                    </td>
+                `;
+                adminContestantsList.appendChild(row);
+            });
+            
+            // Add event listeners to view score buttons
+            document.querySelectorAll('.view-scores-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const contestantId = parseInt(this.getAttribute('data-id'));
+                    switchTab('results');
+                    document.getElementById('result-contestant-select').value = contestantId;
+                    showContestantResults(contestantId);
+                });
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Judge login
+            document.getElementById('judge-login').addEventListener('click', handleJudgeLogin);
+            
+            // Admin login
+            document.getElementById('admin-login').addEventListener('click', handleAdminLogin);
+            
+            // Contestant selection in judge panel
+            document.getElementById('contestant-select').addEventListener('change', function() {
+                const contestantId = parseInt(this.value);
+                if (contestantId) {
+                    showContestantForScoring(contestantId);
+                } else {
+                    contestantInfo.classList.add('hidden');
+                    scoringForm.classList.add('hidden');
+                }
+            });
+            
+            // Contestant selection in results panel
+            document.getElementById('result-contestant-select').addEventListener('change', function() {
+                const contestantId = parseInt(this.value);
+                if (contestantId) {
+                    showContestantResults(contestantId);
+                } else {
+                    resultContainer.classList.add('hidden');
+                }
+            });
+            
+            // Score sliders
+            document.querySelectorAll('.score-slider').forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const valueDisplay = this.parentElement.querySelector('.score-value');
+                    valueDisplay.textContent = this.value;
+                    updateTotalScore();
+                });
+            });
+            
+            // Submit score button
+            document.getElementById('submit-score').addEventListener('click', submitScore);
+            
+            // Admin buttons
+            document.getElementById('sync-contestants').addEventListener('click', syncContestants);
+            document.getElementById('export-results').addEventListener('click', exportResults);
+            document.getElementById('reset-scores').addEventListener('click', resetScores);
+            document.getElementById('save-sheet-settings').addEventListener('click', saveSheetSettings);
+        }
+
+        // Judge login handler
+        function handleJudgeLogin() {
+            const judgeId = document.getElementById('judge-name').value;
+            const password = document.getElementById('judge-password').value;
+            
+            if (!judgeId) {
+                showNotification('กรุณาเลือกชื่อกรรมการ', 'error');
+                return;
+            }
+            
+            const judge = judges.find(j => j.id.toString() === judgeId);
+            
+            if (judge && judge.password === password) {
+                currentJudge = judge;
+                document.getElementById('judge-name').disabled = true;
+                document.getElementById('judge-password').disabled = true;
+                document.getElementById('judge-login').disabled = true;
+                scoringSection.classList.remove('hidden');
+                showNotification(`ยินดีต้อนรับ ${judge.name}`);
+            } else {
+                showNotification('รหัสยืนยันไม่ถูกต้อง', 'error');
+            }
+        }
+
+        // Admin login handler
+        function handleAdminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            // Simple admin authentication (in real app, this would be more secure)
+            if (username === 'admin' && password === 'admin123') {
+                document.getElementById('admin-username').disabled = true;
+                document.getElementById('admin-password').disabled = true;
+                document.getElementById('admin-login').disabled = true;
+                adminControls.classList.remove('hidden');
+                showNotification('เข้าสู่ระบบผู้ดูแลสำเร็จ');
+            } else {
+                showNotification('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', 'error');
+            }
+        }
+
+        // Show contestant for scoring
+        function showContestantForScoring(contestantId) {
+            const contestant = contestants.find(c => c.id === contestantId);
+            if (!contestant) return;
+            
+            currentContestant = contestant;
+            
+            // Update contestant info
+            document.getElementById('contestant-name').textContent = contestant.name;
+            document.getElementById('contestant-department').textContent = contestant.department;
+            
+            // Check if this judge has already scored this contestant
+            const contestantScores = scores[contestantId] || [];
+            const judgeScore = contestantScores.find(s => s.judgeId === currentJudge.id);
+            
+            if (judgeScore) {
+                // Pre-fill the form with existing scores
+                document.querySelector('[data-criteria="creativity"]').value = judgeScore.creativity;
+                document.querySelector('[data-criteria="efficiency"]').value = judgeScore.efficiency;
+                document.querySelector('[data-criteria="practicality"]').value = judgeScore.practicality;
+                document.querySelector('[data-criteria="presentation"]').value = judgeScore.presentation;
+                document.querySelector('[data-criteria="impact"]').value = judgeScore.impact;
+                document.getElementById('judge-comment').value = judgeScore.comment || '';
+                
+                // Update displayed values
+                document.querySelectorAll('.score-slider').forEach(slider => {
+                    const valueDisplay = slider.parentElement.querySelector('.score-value');
+                    valueDisplay.textContent = slider.value;
+                });
+                
+                updateTotalScore();
+            } else {
+                // Reset form to default values
+                document.querySelectorAll('.score-slider').forEach(slider => {
+                    const criteria = slider.getAttribute('data-criteria');
+                    let defaultValue;
+                    
+                    switch (criteria) {
+                        case 'creativity': defaultValue = 10; break;
+                        case 'efficiency': defaultValue = 12; break;
+                        case 'practicality': defaultValue = 10; break;
+                        case 'presentation': defaultValue = 7; break;
+                        case 'impact': defaultValue = 10; break;
+                        default: defaultValue = 0;
+                    }
+                    
+                    slider.value = defaultValue;
+                    const valueDisplay = slider.parentElement.querySelector('.score-value');
+                    valueDisplay.textContent = defaultValue;
+                });
+                
+                document.getElementById('judge-comment').value = '';
+                updateTotalScore();
+            }
+            
+            // Show the form
+            contestantInfo.classList.remove('hidden');
+            scoringForm.classList.remove('hidden');
+        }
+
+        // Update total score
+        function updateTotalScore() {
+            const creativity = parseInt(document.querySelector('[data-criteria="creativity"]').value);
+            const efficiency = parseInt(document.querySelector('[data-criteria="efficiency"]').value);
+            const practicality = parseInt(document.querySelector('[data-criteria="practicality"]').value);
+            const presentation = parseInt(document.querySelector('[data-criteria="presentation"]').value);
+            const impact = parseInt(document.querySelector('[data-criteria="impact"]').value);
+            
+            const total = creativity + efficiency + practicality + presentation + impact;
+            document.getElementById('total-score').textContent = total;
+        }
+
+        // Submit score
+        function submitScore() {
+            if (!currentJudge || !currentContestant) {
+                showNotification('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง', 'error');
+                return;
+            }
+            
+            const creativity = parseInt(document.querySelector('[data-criteria="creativity"]').value);
+            const efficiency = parseInt(document.querySelector('[data-criteria="efficiency"]').value);
+            const practicality = parseInt(document.querySelector('[data-criteria="practicality"]').value);
+            const presentation = parseInt(document.querySelector('[data-criteria="presentation"]').value);
+            const impact = parseInt(document.querySelector('[data-criteria="impact"]').value);
+            const comment = document.getElementById('judge-comment').value;
+            
+            // Create or update score
+            if (!scores[currentContestant.id]) {
+                scores[currentContestant.id] = [];
+            }
+            
+            const existingScoreIndex = scores[currentContestant.id].findIndex(s => s.judgeId === currentJudge.id);
+            
+            if (existingScoreIndex >= 0) {
+                // Update existing score
+                scores[currentContestant.id][existingScoreIndex] = {
+                    judgeId: currentJudge.id,
+                    creativity,
+                    efficiency,
+                    practicality,
+                    presentation,
+                    impact,
+                    comment
+                };
+            } else {
+                // Add new score
+                scores[currentContestant.id].push({
+                    judgeId: currentJudge.id,
+                    creativity,
+                    efficiency,
+                    practicality,
+                    presentation,
+                    impact,
+                    comment
+                });
+            }
+            
+            showNotification('บันทึกคะแนนเรียบร้อยแล้ว');
+            
+            // Reset form
+            document.getElementById('contestant-select').value = '';
+            contestantInfo.classList.add('hidden');
+            scoringForm.classList.add('hidden');
+            currentContestant = null;
+            
+            // Update admin contestants list with new scores
+            populateAdminContestantsList();
+        }
+
+        // Show contestant results
+        function showContestantResults(contestantId) {
+            const contestant = contestants.find(c => c.id === contestantId);
+            if (!contestant) return;
+            
+            // Update contestant info
+            document.getElementById('result-name').textContent = contestant.name;
+            document.getElementById('result-department').textContent = contestant.department;
+            
+            // Get contestant scores
+            const contestantScores = scores[contestantId] || [];
+            
+            // Calculate average scores for each criteria
+            const avgCreativity = contestantScores.reduce((sum, score) => sum + score.creativity, 0) / (contestantScores.length || 1);
+            const avgEfficiency = contestantScores.reduce((sum, score) => sum + score.efficiency, 0) / (contestantScores.length || 1);
+            const avgPracticality = contestantScores.reduce((sum, score) => sum + score.practicality, 0) / (contestantScores.length || 1);
+            const avgPresentation = contestantScores.reduce((sum, score) => sum + score.presentation, 0) / (contestantScores.length || 1);
+            const avgImpact = contestantScores.reduce((sum, score) => sum + score.impact, 0) / (contestantScores.length || 1);
+            
+            const totalAvg = (avgCreativity + avgEfficiency + avgPracticality + avgPresentation + avgImpact);
+            
+            // Update average score display
+            document.getElementById('avg-score').textContent = totalAvg.toFixed(1);
+            
+            // Update score circle
+            const scoreCircle = document.getElementById('score-circle');
+            const circumference = 2 * Math.PI * 45;
+            const dashOffset = circumference * (1 - totalAvg / 100);
+            scoreCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+            scoreCircle.style.strokeDashoffset = dashOffset;
+            
+            // Create or update criteria chart
+            if (criteriaChart) {
+                criteriaChart.destroy();
+            }
+            
+            const ctx = document.getElementById('criteria-chart').getContext('2d');
+            criteriaChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['ความคิดสร้างสรรค์', 'ประสิทธิภาพ', 'การนำไปใช้จริง', 'การนำเสนอ', 'ผลกระทบ'],
+                    datasets: [{
+                        label: 'คะแนนเฉลี่ย',
+                        data: [
+                            (avgCreativity / 20) * 100,
+                            (avgEfficiency / 25) * 100,
+                            (avgPracticality / 20) * 100,
+                            (avgPresentation / 15) * 100,
+                            (avgImpact / 20) * 100
+                        ],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Update judges scores table
+            const judgesScoresTable = document.getElementById('judges-scores');
+            judgesScoresTable.innerHTML = '';
+            
+            contestantScores.forEach(score => {
+                const judge = judges.find(j => j.id === score.judgeId);
+                const row = document.createElement('tr');
+                
+                const total = score.creativity + score.efficiency + score.practicality + score.presentation + score.impact;
+                
+                row.innerHTML = `
+                    <td class="px-4 py-3">${judge ? judge.name : `กรรมการ ${score.judgeId}`}</td>
+                    <td class="px-4 py-3 text-center">${score.creativity}/20</td>
+                    <td class="px-4 py-3 text-center">${score.efficiency}/25</td>
+                    <td class="px-4 py-3 text-center">${score.practicality}/20</td>
+                    <td class="px-4 py-3 text-center">${score.presentation}/15</td>
+                    <td class="px-4 py-3 text-center">${score.impact}/20</td>
+                    <td class="px-4 py-3 text-center font-medium">${total}/100</td>
+                `;
+                
+                judgesScoresTable.appendChild(row);
+            });
+            
+            // Update judges comments
+            const judgesComments = document.getElementById('judges-comments');
+            judgesComments.innerHTML = '';
+            
+            const commentsExist = contestantScores.some(score => score.comment && score.comment.trim() !== '');
+            
+            if (commentsExist) {
+                contestantScores.forEach(score => {
+                    if (score.comment && score.comment.trim() !== '') {
+                        const judge = judges.find(j => j.id === score.judgeId);
+                        const commentDiv = document.createElement('div');
+                        commentDiv.className = 'p-3 bg-gray-50 rounded-md';
+                        commentDiv.innerHTML = `
+                            <p class="font-medium text-blue-600">${judge ? judge.name : `กรรมการ ${score.judgeId}`}</p>
+                            <p class="mt-1">${score.comment}</p>
+                        `;
+                        judgesComments.appendChild(commentDiv);
+                    }
+                });
+            } else {
+                judgesComments.innerHTML = '<p class="text-gray-500 italic">ไม่มีข้อคิดเห็นจากกรรมการ</p>';
+            }
+            
+            // Show results container
+            resultContainer.classList.remove('hidden');
+        }
+
+        // Calculate average score for a contestant
+        function calculateAverageScore(contestantId) {
+            const contestantScores = scores[contestantId] || [];
+            if (contestantScores.length === 0) return 0;
+            
+            let totalScore = 0;
+            contestantScores.forEach(score => {
+                totalScore += score.creativity + score.efficiency + score.practicality + score.presentation + score.impact;
+            });
+            
+            return totalScore / contestantScores.length;
+        }
+
+        // Admin functions
+        function syncContestants() {
+            showNotification('กำลังซิงค์ข้อมูลผู้เข้าประกวดจาก Google Sheet...');
+            setTimeout(() => {
+                showNotification('ซิงค์ข้อมูลเรียบร้อยแล้ว');
+            }, 1500);
+        }
+
+        function exportResults() {
+            showNotification('กำลังส่งออกผลคะแนนไปยัง Google Sheet...');
+            setTimeout(() => {
+                showNotification('ส่งออกข้อมูลเรียบร้อยแล้ว');
+            }, 1500);
+        }
+
+        function resetScores() {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะรีเซ็ตคะแนนทั้งหมด?')) {
+                Object.keys(scores).forEach(key => {
+                    scores[key] = [];
+                });
+                populateAdminContestantsList();
+                showNotification('รีเซ็ตคะแนนทั้งหมดเรียบร้อยแล้ว');
+            }
+        }
+
+        function saveSheetSettings() {
+            const sheetUrl = document.getElementById('sheet-url').value;
+            const contestantsSheet = document.getElementById('contestants-sheet').value;
+            const scoresSheet = document.getElementById('scores-sheet').value;
+            
+            if (!sheetUrl || !contestantsSheet || !scoresSheet) {
+                showNotification('กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+                return;
+            }
+            
+            showNotification('บันทึกการตั้งค่า Google Sheet เรียบร้อยแล้ว');
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            notificationMessage.textContent = message;
+            
+            if (type === 'error') {
+                notification.classList.remove('border-green-500');
+                notification.classList.add('border-red-500');
+                notification.querySelector('svg').classList.remove('text-green-500');
+                notification.querySelector('svg').classList.add('text-red-500');
+            } else {
+                notification.classList.remove('border-red-500');
+                notification.classList.add('border-green-500');
+                notification.querySelector('svg').classList.remove('text-red-500');
+                notification.querySelector('svg').classList.add('text-green-500');
+            }
+            
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9627c93113faa1bc',t:'MTc1MzA3MDM2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
